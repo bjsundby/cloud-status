@@ -1,0 +1,8 @@
+package.json
+
+,
+    "rpi-ws281x-native": "^0.8.1",
+    "i2c-bus": "^1.1.2",
+    "pca9685": "^4.0.3",
+    "wiring-pi": "^2.2.1",
+    "stepper-wiringpi": "^0.0.2"
