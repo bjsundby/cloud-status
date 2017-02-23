@@ -1,7 +1,7 @@
 /* --- Dependencies ---------------------------------- */
 
 var express = require('express');
-var http = require('http').Server(app);
+
 //var i2cBus = require('i2c-bus');
 //var ws281x = require('rpi-ws281x-native');
 //var wpi = require("wiring-pi");
@@ -186,7 +186,7 @@ function processRgbLeds() {
 app.get('/setflag/:position', function (req, res) {
   nextFlagPosition = req.params.position;
   console.log("in setflag: ", nextFlagPosition);
-  res.send('OK')
+  res.json('OK')
 })
 
 // Get flag position in %
@@ -235,11 +235,8 @@ var signals = {
 };
 
 function shutdown(signal, value) {
-  console.log('Stopped by ' + signal);
-
-  lightsOffNeoPixel();
+  lightsOffNeoPixels();
   lightsOffRgbLeds();
-
   process.nextTick(function () {
     process.exit(0);
   });
@@ -252,11 +249,27 @@ Object.keys(signals).forEach(function (signal) {
 });
 
 // Main processing loop, runs 1Hz
-app.listen(3001, function () {
-  console.log('Server listening on port 3001!');
+const server = app.listen(3001, function () {
   setInterval(function () {
     processFlag();
     processNeoPixels();
     processRgbLeds();
   }, 1000);
 });
+
+const io = require('socket.io')(server);  
+
+io.on('connection', (socket) => {  
+  console.log('a user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('room', (data) => {
+    console.log('Got room ' + data.room);
+  });
+})
+
+
+

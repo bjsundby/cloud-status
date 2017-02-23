@@ -1,0 +1,18 @@
+* Implement flag motor functions
+* Implement neopixel leds functions
+* Implement rgb leds functions
+
+* Web page, add status for flag
+* Web page, add controls for controlling flag
+* Web page, add status for neopixel leds
+* Web page, add controls for controlling neopixel leds
+* Web page, add status for rgb leds
+* Web page, add controls for controlling rgb leds
+
+* Add mechanism for updating web page with status changes
+
+* How to handle color sets for pixels?
+* Need new functions for motor, neopixel leds and rgb leds?
+* Need new rest api functions?
+
+* Production setup?

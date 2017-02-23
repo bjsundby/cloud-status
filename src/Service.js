@@ -12,3 +12,9 @@ export function getFlagPosition() {
   return fetch('/getflag', options)
     .then(response => response.json());
 }
+
+export function setFlagPosition(position) {
+  var url = '/setflag/' + position;
+  return fetch(url, options)
+    .then(response => response.json());
+}

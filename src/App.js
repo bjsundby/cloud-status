@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import {getFlagPosition} from './Service';
+import {getFlagPosition,setFlagPosition} from './Service';
 
 import './App.css';
+
+const io = require('socket.io-client')  
 
 class App extends Component {
 
@@ -13,13 +15,18 @@ class App extends Component {
       }
     }
   }
-  componentDidMount() {
 
-      getFlagPosition().then((flagPosition) => {
-        this.setState({
-          flagPosition
-        });
+  componentDidMount() {
+    getFlagPosition().then((flagPosition) => {
+      this.setState({
+        flagPosition
       });
+    });
+
+  }
+
+  setPosition(e, position) {
+    setFlagPosition(position);
   }
 
   render() {
@@ -31,6 +38,7 @@ class App extends Component {
         <p className="App-intro">
           Flag position {this.state.flagPosition.position} as you see.
         </p>
+        <button onClick={e => this.setPosition(e, 50)}>Press me</button>
       </div>
     );
   }
