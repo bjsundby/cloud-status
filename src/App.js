@@ -39,6 +39,7 @@ class App extends Component {
           Flag position {this.state.flagPosition.position} as you see.
         </p>
         <button onClick={e => this.setPosition(e, 50)}>Press me</button>
+        <button>Hei</button>
       </div>
     );
   }
