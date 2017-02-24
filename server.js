@@ -186,6 +186,7 @@ function processRgbLeds() {
 app.get('/setflag/:position', function (req, res) {
   nextFlagPosition = req.params.position;
   console.log("in setflag: ", nextFlagPosition);
+  sendToClient();
   res.json('OK')
 })
 
@@ -193,7 +194,8 @@ app.get('/setflag/:position', function (req, res) {
 app.get('/getflag', function (req, res) {
   console.log("in getflag");
   res.json({
-    position: currentFlagPosition
+    current: currentFlagPosition,
+    next: nextFlagPosition
   });
 })
 
@@ -256,6 +258,10 @@ const server = app.listen(3001, function () {
     processRgbLeds();
   }, 1000);
 });
+
+function sendToClient() {
+  io.emit("flagPosition", { current: currentFlagPosition, next: nextFlagPosition });
+}
 
 const io = require('socket.io')(server);  
 

@@ -3,7 +3,8 @@ import {getFlagPosition,setFlagPosition} from './Service';
 
 import './App.css';
 
-const io = require('socket.io-client')  
+let io = require('socket.io-client');
+let socket = io();
 
 class App extends Component {
 
@@ -11,18 +12,26 @@ class App extends Component {
     super(props);
     this.state = {
       flagPosition: {
-        position: 0
+        current: 0,
+        next: 0
       }
     }
   }
 
+  
+
   componentDidMount() {
+    socket.on('flagPosition', this.updateFlagPosition.bind(this));
     getFlagPosition().then((flagPosition) => {
       this.setState({
         flagPosition
       });
     });
 
+  }
+
+  updateFlagPosition(flagPosition) {
+    this.setState({flagPosition});
   }
 
   setPosition(e, position) {
@@ -35,9 +44,8 @@ class App extends Component {
         <div className="App-header">
           <h2>Build Flag</h2>
         </div>
-        <p className="App-intro">
-          Flag position {this.state.flagPosition.position} as you see.
-        </p>
+        <div className="App-intro">Current Flag position {this.state.flagPosition.current}.</div>
+        <div className="App-intro">Next Flag position {this.state.flagPosition.next}.</div>
         <button onClick={e => this.setPosition(e, 50)}>Press me</button>
         <button>Hei</button>
       </div>
