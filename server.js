@@ -186,7 +186,7 @@ function processRgbLeds() {
 app.get('/setflag/:position', function (req, res) {
   nextFlagPosition = req.params.position;
   console.log("in setflag: ", nextFlagPosition);
-  sendToClient();
+  notifyChangedFlagPosition();
   res.json('OK')
 })
 
@@ -259,23 +259,21 @@ const server = app.listen(3001, function () {
   }, 1000);
 });
 
-function sendToClient() {
-  io.emit("flagPosition", { current: currentFlagPosition, next: nextFlagPosition });
-}
+/* --- Client push setup and functions ---------------------------------- */
 
-const io = require('socket.io')(server);  
+const io = require('socket.io')(server);
 
-io.on('connection', (socket) => {  
-  console.log('a user connected');
+io.on('connection', (socket) => {
+  console.log('dashboard connected');
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('room', (data) => {
-    console.log('Got room ' + data.room);
+    console.log('dashboard disconnected');
   });
 })
 
-
-
+function notifyChangedFlagPosition() {
+  io.emit("flagPosition", {
+    current: currentFlagPosition,
+    next: nextFlagPosition
+  });
+}
