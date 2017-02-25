@@ -2,11 +2,11 @@
 
 var express = require('express');
 
-//var i2cBus = require('i2c-bus');
-//var ws281x = require('rpi-ws281x-native');
-//var wpi = require("wiring-pi");
-//var stepperWiringPi = require("stepper-wiringpi");
-//var Pca9685Driver = require("pca9685").Pca9685Driver;
+var i2cBus = require('i2c-bus');
+var ws281x = require('rpi-ws281x-native');
+var wpi = require("wiring-pi");
+var stepperWiringPi = require("stepper-wiringpi");
+var Pca9685Driver = require("pca9685").Pca9685Driver;
 
 /* --- State variables ------------------------------- */
 
@@ -28,47 +28,44 @@ var neoPixelFunction = ledFunction.OFF;
 
 // Setup web server
 var app = express();
-//app.use(express.static('build'));
 
 // Setup Neopixel Leds
 var NUM_LEDS = 15;
 var pixelData = new Uint32Array(NUM_LEDS);
 var brightness = 128;
-//ws281x.init(NUM_LEDS);
+ws281x.init(NUM_LEDS);
 
 // Setup RGB leds
 var options = {
-  //i2c: i2cBus.openSync(1),
+  i2c: i2cBus.openSync(1),
   address: 0x40,
   frequency: 50,
   debug: false
 };
 
-/*
-var pwm = new Pca9685Driver(options, function(err) {
+var pwm = new Pca9685Driver(options, function (err) {
   if (err) {
-      console.error("Error initializing PCA9685");
-      process.exit(-1);
+    console.error("Error initializing PCA9685");
+    process.exit(-1);
   }
 });
-*/
 
 // Setup sensor for detecting flag at bottom
 var sensorpin = 24;
-//wpi.pinMode(sensorpin, wpi.INPUT);
+wpi.pinMode(sensorpin, wpi.INPUT);
 
 // Setup stepper motor for flag
 var pin1 = 17;
 var pin2 = 27;
 var pin3 = 22;
 var pin4 = 23;
-//wpi.setup('gpio');
-//var motor1 = stepperWiringPi.setup(200, pin1, pin2, pin3, pin4);
-//motor1.setSpeed(200);
+wpi.setup('gpio');
+var motor1 = stepperWiringPi.setup(200, pin1, pin2, pin3, pin4);
+motor1.setSpeed(200);
 
 // Setup sensor for detecting flag at bottom
 var sensorpin = 24;
-//wpi.pinMode(sensorpin, wpi.INPUT);
+wpi.pinMode(sensorpin, wpi.INPUT);
 
 /* --- Common functions ------------------------------- */
 
@@ -123,17 +120,17 @@ function lightsOffNeoPixels() {
     pixelData[i] = color(0, 0, 0);
   }
 
-  //ws281x.render(pixelData);
+  ws281x.render(pixelData);
 }
 
 function lightsOffRgbLeds() {
-  //pwm.setDutyCycle(0, 0.0);
-  //pwm.setDutyCycle(1, 0.0);
-  //pwm.setDutyCycle(2, 0.0);
+  pwm.setDutyCycle(0, 0.0);
+  pwm.setDutyCycle(1, 0.0);
+  pwm.setDutyCycle(2, 0.0);
 }
 
 function readPositionFlagSensor() {
-  return 0; //wpi.digitalRead(sensorpin)
+  return wpi.digitalRead(sensorpin)
 }
 
 /* --- Processing functions ---------------------------------- */
@@ -164,6 +161,7 @@ function processNeoPixels() {
 }
 
 function processRgbLeds() {
+  pwm.setDutyCycle(0, 1.0);
   switch (rgbLedFunction) {
     case ledFunction.OFF:
       lightsOffRgbLeds();

@@ -7,10 +7,16 @@
   },
   "dependencies": {
     "express": "^4.14.1",
+    "i2c-bus": "^1.1.2",
     "npm-run-all": "^4.0.2",
+    "pca9685": "^4.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "socket.io": "^1.7.3"
+    "react-rangeslider": "^2.0.1",
+    "rpi-ws281x-native": "^0.8.1",
+    "socket.io": "^1.7.3",
+    "stepper-wiringpi": "^0.0.2",
+    "wiring-pi": "^2.2.1"
   },
   "scripts": {
     "web": "react-scripts start",
