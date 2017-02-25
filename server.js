@@ -5,10 +5,16 @@ var express = require('express');
 var i2cBus = require('i2c-bus');
 var ws281x = require('rpi-ws281x-native');
 var wpi = require("wiring-pi");
-var stepperWiringPi = require("stepper-wiringpi");
+var stepperWiringPi = require("./stepper-wiringpi");
 var Pca9685Driver = require("pca9685").Pca9685Driver;
 
 /* --- State variables ------------------------------- */
+
+const stepFactor = 230;       // Factor for computing number of steps from %
+const stepRange = 500;        // Number of steps for each separate motor run
+var currentFlagPosition = 0;  // Current flag position in steps
+var nextFlagPosition = 0;     // Flag position in steps
+var flagStatus = 0;           // 0=init, 1=calibrate, 2=stopped, 3=moving
 
 var ledFunction = {
   OFF: 'Off',
@@ -16,10 +22,6 @@ var ledFunction = {
   ROTATE: 'Rotate',
   BLINK: 'Blink'
 };
-
-var currentFlagPosition = -1; // Flag position -1 => unknown, need to calibrate position
-var nextFlagPosition = 0; // Flag position in percentage, 0% at bottom 100% at top
-var flagMoving = false;
 
 var rgbLedFunction = ledFunction.OFF;
 var neoPixelFunction = ledFunction.OFF;
@@ -133,14 +135,68 @@ function readPositionFlagSensor() {
   return wpi.digitalRead(sensorpin)
 }
 
+function moveFlagToBottom() {
+  if (readPositionFlagSensor() == 1) {
+    motor1.step(stepRange, function () {
+      if (readPositionFlagSensor() == 1) {
+        moveFlagToBottom();
+      }
+      else {
+        currentFlagPosition = 0;
+        flagStatus = 2;
+      }
+    })
+  }
+  else {
+    currentFlagPosition = 0;
+    flagStatus = 2;    
+  }
+}
+
+function MoveFlagToPosition() {
+  if (currentFlagPosition != nextFlagPosition) {
+    var steps = (currentFlagPosition - nextFlagPosition);
+    if (steps > stepRange) {
+      steps = stepRange;
+    }
+    if (steps < -stepRange)
+    {
+      steps = -stepRange;
+    }
+    motor1.step(steps, function () {
+      currentFlagPosition -= steps;
+      if (readPositionFlagSensor() == 1) {
+        MoveFlagToPosition();
+      }
+    })
+  }
+  else {
+    flagStatus = 2;
+  }
+}
+
 /* --- Processing functions ---------------------------------- */
 
 function processFlag() {
-  //console.log("Sensor: ", readPositionFlagSensor());
+  console.log("Sensor: ", readPositionFlagSensor());
+  console.log("flagStatus: ", flagStatus);
 
-  // if currentposition == -1, then move flag towards bottom
-  // if flag at bottom, set current position to 0,
-  // if currentPosition != nextPosition, mode flag towards next position
+  // Check for inital calibration
+  if (flagStatus == 0) {
+    flagStatus = 1;
+    console.log("Starting calibrate");
+    moveFlagToBottom();
+  }
+
+  // Check for moving flag request
+  if (flagStatus == 2 && (currentFlagPosition != nextFlagPosition)) {
+    console.log("Start moving flag");
+    flagStatus = 3;
+    MoveFlagToPosition();
+  }
+
+  // Notify clients
+  notifyChangedFlagPosition();
 }
 
 function processNeoPixels() {
@@ -182,7 +238,7 @@ function processRgbLeds() {
 
 // Set flag position in %
 app.get('/setflag/:position', function (req, res) {
-  nextFlagPosition = req.params.position;
+  nextFlagPosition = req.params.position * stepFactor;
   console.log("in setflag: ", nextFlagPosition);
   notifyChangedFlagPosition();
   res.json('OK')
@@ -192,8 +248,8 @@ app.get('/setflag/:position', function (req, res) {
 app.get('/getflag', function (req, res) {
   console.log("in getflag");
   res.json({
-    current: currentFlagPosition,
-    next: nextFlagPosition
+    current: Math.round(currentFlagPosition / stepFactor),
+    next: Math.round(nextFlagPosition / stepFactor)
   });
 })
 
@@ -271,7 +327,7 @@ io.on('connection', (socket) => {
 
 function notifyChangedFlagPosition() {
   io.emit("flagPosition", {
-    current: currentFlagPosition,
-    next: nextFlagPosition
+    current: Math.round(currentFlagPosition / stepFactor),
+    next: Math.round(nextFlagPosition / stepFactor)
   });
 }

@@ -15,7 +15,6 @@
     "react-rangeslider": "^2.0.1",
     "rpi-ws281x-native": "^0.8.1",
     "socket.io": "^1.7.3",
-    "stepper-wiringpi": "^0.0.2",
     "wiring-pi": "^2.2.1"
   },
   "scripts": {

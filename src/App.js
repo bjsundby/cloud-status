@@ -58,14 +58,14 @@ class App extends Component {
         <div className="App-header">
           <h2>Build Flag</h2>
         </div>
-        <div className="App-intro">Current Flag position {this.state.flagPosition.current}.</div>
-        <div className="App-intro">Next Flag position {this.state.flagPosition.next}.</div>
-        <button onClick={e => this.setPosition(e, this.state.nextPosition)}>Press me</button>
-        <Slider width="100%"
+        <div className="Information">Current Flag position {this.state.flagPosition.current}.</div>
+        <div className="Information">Next Flag position {this.state.flagPosition.next}.</div>
+         <Slider className="Slider" width="100%"
           value={nextPosition}
           onChange={this.handleOnChange}
         />
-      </div>
+        <button onClick={e => this.setPosition(e, this.state.nextPosition)}>Submit</button>
+     </div>
     );
   }
 }
