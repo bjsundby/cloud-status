@@ -18,3 +18,14 @@ export function setFlagPosition(position) {
   return fetch(url, options)
     .then(response => response.json());
 }
+
+export function getRgbLedsFunction() {
+  return fetch('/getrgbled', options)
+    .then(response => response.json());
+}
+
+export function setRgbLedsFunction(rgbLedsFunction) {
+  var url = '/setrgbled/function/' + rgbLedsFunction;
+  return fetch(url, options)
+    .then(response => response.json());
+}
