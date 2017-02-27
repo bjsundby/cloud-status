@@ -92,6 +92,16 @@ function colorExtract(color, name) {
   return 0;
 }
 
+function parseColorsString(colorsString) {
+  var strings = colorsString.split(",");
+  var colors = [];
+  strings.forEach(function(colorString) {
+    colors.push(parseInt(colorString, 10));
+  });
+
+  return colors; 
+}
+
 function parseLedFunctionEnum(value) {
   var parsedFunction = ledFunction.OFF;
   switch (value) {
@@ -269,8 +279,8 @@ function processRgbLed() {
       break;
     case ledFunction.ON:
       setLedColor(0, rgbLedColorSet[0]);
-      setLedColor(1, rgbLedColorSet[0]);
-      setLedColor(2, rgbLedColorSet[0]);
+      setLedColor(1, rgbLedColorSet[1]);
+      setLedColor(2, rgbLedColorSet[2]);
       break;
     case ledFunction.ROTATE:
       switch (rgbLedCurrent) {
@@ -282,14 +292,14 @@ function processRgbLed() {
           break;
         case 1:
           setLedColor(0, 0);
-          setLedColor(1, rgbLedColorSet[0]);
+          setLedColor(1, rgbLedColorSet[1]);
           setLedColor(2, 0);
           rgbLedCurrent = 2;
           break;
         case 2:
           setLedColor(0, 0);
           setLedColor(1, 0);
-          setLedColor(2, rgbLedColorSet[0]);
+          setLedColor(2, rgbLedColorSet[2]);
           rgbLedCurrent = 0;
           break;
       }
@@ -297,8 +307,8 @@ function processRgbLed() {
     case ledFunction.BLINK:
       if (rgbLedBlinkState) {
         setLedColor(0, rgbLedColorSet[0]);
-        setLedColor(1, rgbLedColorSet[0]);
-        setLedColor(2, rgbLedColorSet[0]);
+        setLedColor(1, rgbLedColorSet[1]);
+        setLedColor(2, rgbLedColorSet[2]);
         rgbLedBlinkState = false
       }
       else {
@@ -345,6 +355,14 @@ app.get('/setrgbled/function/:function', function (req, res) {
   var functionValue = parseLedFunctionEnum(req.params.function);
   rgbLedFunction = functionValue;
   console.log("in setrgbled: function ", functionValue);
+  res.json('OK')
+})
+
+// Set rgbled colors
+app.get('/setrgbled/colors/:colors', function (req, res) {
+  var colors = parseColorsString(req.params.colors);
+  rgbLedColorSet = colors;
+  console.log("in setrgbled: colors ", colors);
   res.json('OK')
 })
 

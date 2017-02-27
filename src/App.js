@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Slider from 'react-rangeslider'
-import { getStatus, setFlagPosition, setRgbLedFunction } from './Service';
+import { getStatus, setFlagPosition, setRgbLedFunction, setRgbLedColors } from './Service';
 
 import './App.css';
 
@@ -8,6 +8,8 @@ import 'react-rangeslider/lib/index.css'
 
 let io = require('socket.io-client');
 let socket = io();
+
+const colors = [0xFF0000, 0x00FF00, 0x0000FF];
 
 class App extends Component {
 
@@ -36,6 +38,8 @@ class App extends Component {
         neopixelFunction: status.neopixelFunction
       });
     });
+
+    setRgbLedColors(colors);
   }
 
   updateFlagPosition(flagPosition) {

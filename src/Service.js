@@ -24,3 +24,9 @@ export function setRgbLedFunction(rgbLedFunction) {
   return fetch(url, options)
     .then(response => response.json());
 }
+
+export function setRgbLedColors(colors) {
+  var url = '/setrgbled/colors/' + colors;
+  return fetch(url, options)
+    .then(response => response.json());
+}
