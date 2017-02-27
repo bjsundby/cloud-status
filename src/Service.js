@@ -8,8 +8,8 @@ const options = {
   }
 };
 
-export function getFlagPosition() {
-  return fetch('/getflag', options)
+export function getStatus() {
+  return fetch('/getStatus', options)
     .then(response => response.json());
 }
 
@@ -19,13 +19,8 @@ export function setFlagPosition(position) {
     .then(response => response.json());
 }
 
-export function getRgbLedsFunction() {
-  return fetch('/getrgbled', options)
-    .then(response => response.json());
-}
-
-export function setRgbLedsFunction(rgbLedsFunction) {
-  var url = '/setrgbled/function/' + rgbLedsFunction;
+export function setRgbLedFunction(rgbLedFunction) {
+  var url = '/setrgbled/function/' + rgbLedFunction;
   return fetch(url, options)
     .then(response => response.json());
 }

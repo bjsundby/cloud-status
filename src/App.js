@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Slider from 'react-rangeslider'
-import { getFlagPosition, setFlagPosition, getRgbLedsFunction, setRgbLedsFunction } from './Service';
+import { getStatus, setFlagPosition, setRgbLedFunction } from './Service';
 
 import './App.css';
 
@@ -19,23 +19,23 @@ class App extends Component {
         next: 0
       },
       nextPosition: 0,
-      rgbLedsFunction: 'Off'
+      rgbLedFunction: 'Off',
+      neopixelFunction: 'Off'
     }
   }
 
   componentDidMount() {
     socket.on('flagPosition', this.updateFlagPosition.bind(this));
 
-    Promise.all([
-      getFlagPosition(),
-      getRgbLedsFunction()
-    ]).then((values) => {
+    getStatus().then((status) => {
+      console.log("componentDidMount", status);
       this.setState({
-        flagPosition: values[0],
-        nextPosition: parseInt(this.state.flagPosition.next, 10),
-        rgbLedsFunction: values[1].function
+        flagPosition: status.flagPosition,
+        nextPosition: parseInt(status.flagPosition.next, 10),
+        rgbLedFunction: status.rgbLedFunction,
+        neopixelFunction: status.neopixelFunction
       });
-    })
+    });
   }
 
   updateFlagPosition(flagPosition) {
@@ -56,15 +56,15 @@ class App extends Component {
     })
   }
 
-  handleRgbLedsFunctionChange = (changeEvent) => {
+  handleRgbLedFunctionChange = (changeEvent) => {
     this.setState({
-      rgbLedsFunction: changeEvent.target.value
+      rgbLedFunction: changeEvent.target.value
     });
   }
 
-  setRgbLedsFunction(e, rgbLedsFunction) {
-    console.log("setRgbLedsFunction", rgbLedsFunction)
-    setRgbLedsFunction(rgbLedsFunction);
+  setRgbLedFunction(e, rgbLedFunction) {
+    console.log("setRgbLedFunction", rgbLedFunction)
+    setRgbLedFunction(rgbLedFunction);
   }
 
   render() {
@@ -81,45 +81,43 @@ class App extends Component {
           onChange={this.handleOnChange}
         />
         <button onClick={e => this.setFlagPosition(e, this.state.nextPosition)}>Update Flag position</button>
-        <div className="Information">RGB Leds function: {this.state.rgbLedsFunction}.</div>
+        <div className="Information">RGB Led function: {this.state.rgbLedFunction}.</div>
         <form>
           <div className="radio">
             <label>
               <input type="radio" value="Off"
-                checked={this.state.rgbLedsFunction === 'Off'}
-                onChange={this.handleRgbLedsFunctionChange} />
+                checked={this.state.rgbLedFunction === 'Off'}
+                onChange={this.handleRgbLedFunctionChange} />
               Off
             </label>
           </div>
           <div className="radio">
             <label>
               <input type="radio" value="On"
-                checked={this.state.rgbLedsFunction === 'On'}
-                onChange={this.handleRgbLedsFunctionChange} />
+                checked={this.state.rgbLedFunction === 'On'}
+                onChange={this.handleRgbLedFunctionChange} />
               On
             </label>
           </div>
           <div className="radio">
             <label>
               <input type="radio" value="Rotate"
-                checked={this.state.rgbLedsFunction === 'Rotate'}
-                onChange={this.handleRgbLedsFunctionChange} />
+                checked={this.state.rgbLedFunction === 'Rotate'}
+                onChange={this.handleRgbLedFunctionChange} />
               Rotate
             </label>
           </div>
           <div className="radio">
             <label>
               <input type="radio" value="Blink"
-                checked={this.state.rgbLedsFunction === 'Blink'}
-                onChange={this.handleRgbLedsFunctionChange} />
+                checked={this.state.rgbLedFunction === 'Blink'}
+                onChange={this.handleRgbLedFunctionChange} />
               Blink
             </label>
           </div>
         </form>
-        <button onClick={e => this.setRgbLedsFunction(e, this.state.rgbLedsFunction)}>Update RGB Leds function</button>
+        <button onClick={e => this.setRgbLedFunction(e, this.state.rgbLedFunction)}>Update RGB Led function</button>
 
-        <div className="Information">NeoPixels function: {this.state.rgbLedsFunction}.</div>
-        <button>Update Neopixels function</button>
       </div>
     );
   }
