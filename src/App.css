@@ -8,3 +8,30 @@
   padding: 10px;
   color: white;
 }
+
+.FlagContainer {
+  margin: 20px;
+}
+
+.RgbLedContainer {
+  display: block;
+  margin: 30px 0 30px 0;  
+}
+
+.Container {
+  display: block;
+}
+
+.Information {
+  display: inline-block;
+  margin: 0 20px 0 20px;
+}
+
+.SelectionForm {
+  margin: 10px;
+}
+
+.radio {
+  display: inline-block;
+  margin : 10px;
+}

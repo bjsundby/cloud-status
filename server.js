@@ -206,6 +206,10 @@ function MoveFlagToPosition() {
       if (readPositionFlagSensor() == 1) {
         MoveFlagToPosition();
       }
+      else {
+        flagStatus = 2;
+        currentFlagPosition = 0;
+      }
     })
   }
   else {
@@ -242,7 +246,6 @@ var neoPixelColorSet = [
 /* --- Processing functions ---------------------------------- */
 
 function processFlag() {
-
   // Check for inital calibration
   if (flagStatus == 0) {
     flagStatus = 1;

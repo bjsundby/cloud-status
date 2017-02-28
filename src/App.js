@@ -78,7 +78,7 @@ class App extends Component {
   }
 
   handleRgbLedFunctionChange = (changeEvent) => {
-    console.log("handleRgbLedFunctionChange: ",changeEvent.target.value)
+    console.log("handleRgbLedFunctionChange: ", changeEvent.target.value)
     this.setState({
       rgbLedFunction: changeEvent.target.value
     });
@@ -89,7 +89,7 @@ class App extends Component {
   }
 
   handleNeoPixelFunctionChange = (changeEvent) => {
-    console.log("handleNeoPixelFunctionChange: ",changeEvent.target.value)
+    console.log("handleNeoPixelFunctionChange: ", changeEvent.target.value)
     this.setState({
       neoPixelFunction: changeEvent.target.value
     });
@@ -104,53 +104,57 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Build Flag</h2>
+          <h2>Visual Status Device</h2>
         </div>
-        <div className="Information">Current Flag position: {this.state.flagPosition.current}.</div>
-        <div className="Information">Next Flag position: {this.state.flagPosition.next}.</div>
-        <Slider className="Slider" width="100%"
-          value={nextPosition}
-          onChange={this.handleOnChange}
-        />
-        <button onClick={e => this.setFlagPosition(e, this.state.nextPosition)}>Update Flag position</button>
-
-        <div className="Information">RGB Led function: {this.state.rgbLedFunction}.</div>
-        <form>
-          <div className="radio">
-            <label>
-              <input type="radio" value="Off"
-                checked={this.state.rgbLedFunction === 'Off'}
-                onChange={this.handleRgbLedFunctionChange} />
-              Off
-            </label>
+        <div className="FlagContainer">
+          <div className="Container">
+            <div className="Information">Current Flag position: {this.state.flagPosition.current}.</div>
+            <div className="Information">Next Flag position: {this.state.flagPosition.next}.</div>
           </div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="On"
-                checked={this.state.rgbLedFunction === 'On'}
-                onChange={this.handleRgbLedFunctionChange} />
-              On
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="Rotate"
-                checked={this.state.rgbLedFunction === 'Rotate'}
-                onChange={this.handleRgbLedFunctionChange} />
-              Rotate
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input type="radio" value="Blink"
-                checked={this.state.rgbLedFunction === 'Blink'}
-                onChange={this.handleRgbLedFunctionChange} />
-              Blink
-            </label>
-          </div>
-        </form>
-        <button onClick={e => this.setRgbLedFunction(e, this.state.rgbLedFunction)}>Update RGB Led function</button>
-
+          <Slider className="Slider" width="100%"
+            value={nextPosition}
+            onChange={this.handleOnChange}
+          />
+          <button onClick={e => this.setFlagPosition(e, this.state.nextPosition)}>Set Flag position</button>
+        </div>
+        <div className="RgbLedContainer">
+          <div className="Information">RGB Led function: {this.state.rgbLedFunction}.</div>
+          <form className="SelectionForm">
+            <div className="radio">
+              <label>
+                <input type="radio" value="Off"
+                  checked={this.state.rgbLedFunction === 'Off'}
+                  onChange={this.handleRgbLedFunctionChange} />
+                Off
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input type="radio" value="On"
+                  checked={this.state.rgbLedFunction === 'On'}
+                  onChange={this.handleRgbLedFunctionChange} />
+                On
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input type="radio" value="Rotate"
+                  checked={this.state.rgbLedFunction === 'Rotate'}
+                  onChange={this.handleRgbLedFunctionChange} />
+                Rotate
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input type="radio" value="Blink"
+                  checked={this.state.rgbLedFunction === 'Blink'}
+                  onChange={this.handleRgbLedFunctionChange} />
+                Blink
+              </label>
+            </div>
+          </form>
+          <button onClick={e => this.setRgbLedFunction(e, this.state.rgbLedFunction)}>Set RGB Led function</button>
+        </div>
         <div className="Information">Neo Pixel function: {this.state.neoPixelFunction}.</div>
         <form>
           <div className="radio">
@@ -186,7 +190,7 @@ class App extends Component {
             </label>
           </div>
         </form>
-        <button onClick={e => this.setNeoPixelFunction(e, this.state.neoPixelFunction)}>Update Neo Pixel function</button>
+        <button onClick={e => this.setNeoPixelFunction(e, this.state.neoPixelFunction)}>Set Neo Pixel function</button>
       </div>
     );
   }
