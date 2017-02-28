@@ -25,8 +25,20 @@ export function setRgbLedFunction(rgbLedFunction) {
     .then(response => response.json());
 }
 
+export function setNeoPixelFunction(neoPixelFunction) {
+  var url = '/setneopixel/function/' + neoPixelFunction;
+  return fetch(url, options)
+    .then(response => response.json());
+}
+
 export function setRgbLedColors(colors) {
   var url = '/setrgbled/colors/' + colors;
+  return fetch(url, options)
+    .then(response => response.json());
+}
+
+export function setNeoPixelColors(colors) {
+  var url = '/setneopixel/colors/' + colors;
   return fetch(url, options)
     .then(response => response.json());
 }

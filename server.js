@@ -23,9 +23,17 @@ var ledFunction = {
   BLINK: 'Blink'
 };
 
+const numberOfRgbLeds = 3;
+const numberOfNeoPixels = 15;
+
 var rgbLedFunction = ledFunction.OFF;
 var neoPixelFunction = ledFunction.OFF;
 
+var rgbLedBlinkState = false;
+var rgbLedCurrent = 0;
+
+var neoPixelBlinkState = false;
+var neoPixelCurrent = 0;
 
 /* --- Setup subsystems ------------------------------- */
 
@@ -95,11 +103,11 @@ function colorExtract(color, name) {
 function parseColorsString(colorsString) {
   var strings = colorsString.split(",");
   var colors = [];
-  strings.forEach(function(colorString) {
+  strings.forEach(function (colorString) {
     colors.push(parseInt(colorString, 10));
   });
 
-  return colors; 
+  return colors;
 }
 
 function parseLedFunctionEnum(value) {
@@ -208,27 +216,27 @@ function MoveFlagToPosition() {
 /* --- Color sets ---------------------------------- */
 
 var rgbLedColorSet = [
-  colorCombine(255, 0, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 0, 255, 255)
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255)
 ];
 
 var neoPixelColorSet = [
-  colorCombine(255, 0, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 0, 255, 255),
-  colorCombine(255, 255, 255, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255),
-  colorCombine(0, 255, 0, 255)
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255),
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255),
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255),
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255),
+  colorCombine(255, 0, 0),
+  colorCombine(0, 255, 0),
+  colorCombine(0, 0, 255),
 ];
 
 /* --- Processing functions ---------------------------------- */
@@ -251,27 +259,6 @@ function processFlag() {
   notifyChangedFlagPosition();
 }
 
-function processNeoPixel() {
-  ws281x.render(neoPixelColorSet);
-  switch (neoPixelFunction) {
-    case ledFunction.OFF:
-      //lightsOffNeoPixel();
-      break;
-    case ledFunction.ON:
-      // Set to color
-      break;
-    case ledFunction.ROTATE:
-      // Rotate with color set
-      break;
-    case ledFunction.BLINK:
-      // Blink with color set
-      break;
-  }
-}
-
-var rgbLedBlinkState = false;
-var rgbLedCurrent = 0;
-
 function processRgbLed() {
   switch (rgbLedFunction) {
     case ledFunction.OFF:
@@ -283,26 +270,11 @@ function processRgbLed() {
       setLedColor(2, rgbLedColorSet[2]);
       break;
     case ledFunction.ROTATE:
-      switch (rgbLedCurrent) {
-        case 0:
-          setLedColor(0, rgbLedColorSet[0]);
-          setLedColor(1, 0);
-          setLedColor(2, 0);
-          rgbLedCurrent = 1;
-          break;
-        case 1:
-          setLedColor(0, 0);
-          setLedColor(1, rgbLedColorSet[1]);
-          setLedColor(2, 0);
-          rgbLedCurrent = 2;
-          break;
-        case 2:
-          setLedColor(0, 0);
-          setLedColor(1, 0);
-          setLedColor(2, rgbLedColorSet[2]);
-          rgbLedCurrent = 0;
-          break;
+      for (ledIndex = 0; ledIndex < numberOfRgbLeds; ledIndex++) {
+        var colorIndex = (rgbLedCurrent + ledIndex) % numberOfRgbLeds;
+        setLedColor(ledIndex, rgbLedColorSet[colorIndex])
       }
+      rgbLedCurrent = (rgbLedCurrent + 1) % numberOfRgbLeds;
       break;
     case ledFunction.BLINK:
       if (rgbLedBlinkState) {
@@ -319,11 +291,40 @@ function processRgbLed() {
   }
 }
 
+function processNeoPixel() {
+  switch (neoPixelFunction) {
+    case ledFunction.OFF:
+      lightsOffNeoPixel();
+      break;
+    case ledFunction.ON:
+      ws281x.render(neoPixelColorSet);
+      break;
+    case ledFunction.ROTATE:
+      var rotateColorSet = [];
+      for (ledIndex = 0; ledIndex < numberOfNeoPixels; ledIndex++) {
+        var colorIndex = (neoPixelCurrent + ledIndex) % numberOfNeoPixels;
+        rotateColorSet.push(neoPixelColorSet[colorIndex])
+      }
+      ws281x.render(rotateColorSet);
+      neoPixelCurrent = (neoPixelCurrent + 1) % numberOfNeoPixels;
+      break;
+    case ledFunction.BLINK:
+      if (neoPixelBlinkState) {
+        ws281x.render(neoPixelColorSet);
+        neoPixelBlinkState = false
+      }
+      else {
+        lightsOffNeoPixel();
+        neoPixelBlinkState = true;
+      }
+      break;
+  }
+}
+
 /* --- Rest api ---------------------------------- */
 
 // Get status, flag positions in %, rgb led function, neopixel function
 app.get('/getStatus', function (req, res) {
-  console.log("in getStatus");
   res.json({
     flagPosition: {
       current: Math.round(currentFlagPosition / stepFactor),
@@ -337,16 +338,7 @@ app.get('/getStatus', function (req, res) {
 // Set flag position in %
 app.get('/setflag/:position', function (req, res) {
   nextFlagPosition = req.params.position * stepFactor;
-  console.log("in setflag: ", nextFlagPosition);
   notifyChangedFlagPosition();
-  res.json('OK')
-})
-
-// Set neopixel function, function: Off, On, Rotate, Blink
-app.get('/setneopixel/function/:function', function (req, res) {
-  var functionValue = parseLedFunctionEnum(req.params.function);
-  neoPixelFunction = functionValue;
-  console.log("in setneopixel: function ", functionValue);
   res.json('OK')
 })
 
@@ -354,7 +346,15 @@ app.get('/setneopixel/function/:function', function (req, res) {
 app.get('/setrgbled/function/:function', function (req, res) {
   var functionValue = parseLedFunctionEnum(req.params.function);
   rgbLedFunction = functionValue;
-  console.log("in setrgbled: function ", functionValue);
+  notifyChangedRgbLedFunction();
+  res.json('OK')
+})
+
+// Set neopixel function, function: Off, On, Rotate, Blink
+app.get('/setneopixel/function/:function', function (req, res) {
+  var functionValue = parseLedFunctionEnum(req.params.function);
+  neoPixelFunction = functionValue;
+  notifyChangedNeoPixelFunction();
   res.json('OK')
 })
 
@@ -362,7 +362,13 @@ app.get('/setrgbled/function/:function', function (req, res) {
 app.get('/setrgbled/colors/:colors', function (req, res) {
   var colors = parseColorsString(req.params.colors);
   rgbLedColorSet = colors;
-  console.log("in setrgbled: colors ", colors);
+  res.json('OK')
+})
+
+// Set neopixel colors
+app.get('/setneopixel/colors/:colors', function (req, res) {
+  var colors = parseColorsString(req.params.colors);
+  neoPixelColorSet = colors;
   res.json('OK')
 })
 
@@ -387,13 +393,13 @@ Object.keys(signals).forEach(function (signal) {
   });
 });
 
-// Main processing loop, runs 1Hz
+// Main processing loop, runs 2Hz
 const server = app.listen(3001, function () {
   setInterval(function () {
     processFlag();
-    processNeoPixel();
     processRgbLed();
-  }, 1000);
+    processNeoPixel();
+  }, 500);
 });
 
 /* --- Client push setup and functions ---------------------------------- */
@@ -414,3 +420,16 @@ function notifyChangedFlagPosition() {
     next: Math.round(nextFlagPosition / stepFactor)
   });
 }
+
+function notifyChangedRgbLedFunction() {
+  io.emit("rgbLedFunction", {
+    rgbLedFunction: getLedFunctionEnumString(rgbLedFunction),
+  });
+}
+
+function notifyChangedNeoPixelFunction() {
+  io.emit("neoPixelFunction", {
+    neoPixelFunction: getLedFunctionEnumString(neoPixelFunction),
+  });
+}
+
