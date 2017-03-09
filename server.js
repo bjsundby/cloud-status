@@ -39,6 +39,7 @@ var neoPixelCurrent = 0;
 
 // Setup web server
 var app = express();
+app.set('port', (process.env.PORT || 3001));
 
 // Setup Neopixel Leds
 var NUM_LEDS = 15;
@@ -397,7 +398,8 @@ Object.keys(signals).forEach(function (signal) {
 });
 
 // Main processing loop, runs 2Hz
-const server = app.listen(3001, function () {
+const server = app.listen(app.get('port'), () => {
+  console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
   setInterval(function () {
     processFlag();
     processRgbLed();
