@@ -254,7 +254,7 @@ function processFlag() {
   // Check for inital calibration
   if (flagStatus == 0) {
     flagStatus = 1;
-    moveFlagToBottom();
+    calibrateFlag();
   }
 
   // Check for moving flag request
@@ -414,14 +414,6 @@ const server = app.listen(app.get('port'), () => {
 /* --- Client push setup and functions ---------------------------------- */
 
 const io = require('socket.io')(server);
-
-io.on('connection', (socket) => {
-  console.log('dashboard connected');
-
-  socket.on('disconnect', () => {
-    console.log('dashboard disconnected');
-  });
-})
 
 function notifyChangedFlagPosition() {
   io.emit("flagPosition", {
