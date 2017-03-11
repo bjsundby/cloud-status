@@ -175,13 +175,17 @@ function readPositionFlagSensor() {
   return wpi.digitalRead(sensorpin)
 }
 
-function moveFlagToBottom() {
+function calibrateFlag() {
   if (readPositionFlagSensor() == 1) {
+    setLedColor(0, rgbLedColorSet[0]);
+    setLedColor(1, rgbLedColorSet[1]);
+    setLedColor(2, rgbLedColorSet[2]);
     motor1.step(stepRange, function () {
       if (readPositionFlagSensor() == 1) {
-        moveFlagToBottom();
+        calibrateFlag();
       }
       else {
+        lightsOffRgbLed();
         currentFlagPosition = 0;
         flagStatus = 2;
       }
