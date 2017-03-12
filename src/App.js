@@ -9,13 +9,6 @@ import 'react-rangeslider/lib/index.css'
 let io = require('socket.io-client');
 let socket = io();
 
-const rgbLedColors = [0xFF0000, 0x00FF00, 0x0000FF];
-const neoPixelColors = [
-  0xFF0000, 0x00FF00, 0x0000FF, 0xFF0000, 0x00FF00,
-  0x0000FF, 0xFF0000, 0x00FF00, 0x0000FF, 0xFF0000,
-  0x00FF00, 0x0000FF, 0xFF0000, 0x00FF00, 0x0000FF
-];
-
 class App extends Component {
 
   constructor(props) {
@@ -44,9 +37,6 @@ class App extends Component {
         neoPixelFunction: status.neoPixelFunction
       });
     });
-
-    setRgbLedColors(rgbLedColors);
-    setNeoPixelColors(neoPixelColors);
   }
 
   updateFlagPosition(flagPosition) {
