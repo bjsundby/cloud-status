@@ -1,12 +1,14 @@
 /* --- Dependencies ---------------------------------- */
 
 var express = require('express');
-
+var Client = require('node-rest-client').Client;
 var i2cBus = require('i2c-bus');
 var ws281x = require('rpi-ws281x-native');
 var wpi = require("wiring-pi");
 var stepperWiringPi = require("./stepper-wiringpi");
 var Pca9685Driver = require("pca9685").Pca9685Driver;
+
+var client = new Client();
 
 /* --- State variables ------------------------------- */
 
@@ -34,6 +36,9 @@ var rgbLedCurrent = 0;
 
 var neoPixelBlinkState = false;
 var neoPixelCurrent = 0;
+
+var ip = require("ip");
+var os = require("os");
 
 /* --- Setup subsystems ------------------------------- */
 
@@ -90,13 +95,10 @@ function colorExtract(color, name) {
   switch (name) {
     case "r":
       return (color >> 16) & 0xff;
-      break;
     case "g":
       return (color >> 8) & 0xff;
-      break;
     case "b":
       return color & 0xff;
-      break;
   }
   return 0;
 }
@@ -107,7 +109,6 @@ function parseColorsString(colorsString) {
   strings.forEach(function (colorString) {
     colors.push(parseInt(colorString, 10));
   });
-
   return colors;
 }
 
@@ -153,7 +154,6 @@ function lightsOffNeoPixel() {
   for (var i = 0; i < NUM_LEDS; i++) {
     pixelData[i] = colorCombine(0, 0, 0);
   }
-
   ws281x.render(pixelData);
 }
 
@@ -249,6 +249,15 @@ var neoPixelColorSet = [
 ];
 
 /* --- Processing functions ---------------------------------- */
+
+function reportUrl() {
+  var link = 'http://' + ip.address() + ':3000';
+  var url = 'https://buildflag-hub.herokuapp.com/api/updateTarget?name=' + os.hostname() + '&link=' + link;
+  console.log(url)
+  client.get(url, function (data, response) {
+    console.log(url)
+  });
+}
 
 function processFlag() {
   // Check for inital calibration
@@ -409,6 +418,9 @@ const server = app.listen(app.get('port'), () => {
     processRgbLed();
     processNeoPixel();
   }, 500);
+  setInterval(function () {
+    reportUrl();
+  }, 10*60*1000)
 });
 
 /* --- Client push setup and functions ---------------------------------- */
