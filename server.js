@@ -44,7 +44,7 @@ var os = require("os");
 
 // Setup web server
 var app = express();
-app.set('port', (process.env.PORT || 3001));
+app.set('port', (process.env.PORT || 3002));
 
 // Setup Neopixel Leds
 var NUM_LEDS = 15;
@@ -420,7 +420,7 @@ const server = app.listen(app.get('port'), () => {
   }, 500);
   setInterval(function () {
     reportUrl();
-  }, 10*60*1000)
+  }, 60*1000)
 });
 
 /* --- Client push setup and functions ---------------------------------- */

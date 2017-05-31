@@ -29,5 +29,5 @@
     "start": "run-p server web",
     "prod": "npm run build && npm run server"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3002"
 }
