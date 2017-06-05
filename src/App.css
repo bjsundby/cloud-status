@@ -13,7 +13,7 @@
   margin: 20px;
 }
 
-.RgbLedContainer {
+.LedContainer {
   display: block;
   margin: 30px 0 30px 0;  
 }
@@ -22,12 +22,21 @@
   display: block;
 }
 
-.Information {
+.TopInformation {
   display: inline-block;
   margin: 0 20px 0 20px;
 }
 
-.SelectionForm {
+.BottomInformation {
+  display: inline-block;
+  margin: 0 20px 0 20px;
+}
+
+.TopForm {
+  margin: 10px;
+}
+
+.BottomForm {
   margin: 10px;
 }
 

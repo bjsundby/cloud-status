@@ -19,26 +19,20 @@ export function setFlagPosition(position) {
     .then(response => response.json());
 }
 
-export function setRgbLedFunction(rgbLedFunction) {
-  var url = '/setrgbled/function/' + rgbLedFunction;
+export function setTopLedFunction(ledFunction) {
+  var url = '/settopled/function/' + ledFunction;
   return fetch(url, options)
     .then(response => response.json());
 }
 
-export function setNeoPixelFunction(neoPixelFunction) {
-  var url = '/setneopixel/function/' + neoPixelFunction;
+export function setBottomLedFunction(ledFunction) {
+  var url = '/setbottomled/function/' + ledFunction;
   return fetch(url, options)
     .then(response => response.json());
 }
 
-export function setRgbLedColors(colors) {
-  var url = '/setrgbled/colors/' + colors;
-  return fetch(url, options)
-    .then(response => response.json());
-}
-
-export function setNeoPixelColors(colors) {
-  var url = '/setneopixel/colors/' + colors;
+export function setLedColors(colors) {
+  var url = '/setledcolors/' + colors;
   return fetch(url, options)
     .then(response => response.json());
 }

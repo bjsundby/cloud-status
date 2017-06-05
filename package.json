@@ -1,5 +1,5 @@
 {
-  "name": "build-flag",
+  "name": "build-flag2",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -12,7 +12,6 @@
     "node-rest-client": "^3.1.0",
     "npm-run-all": "^4.0.2",
     "os": "^0.1.1",
-    "pca9685": "^4.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-rangeslider": "^2.0.1",
