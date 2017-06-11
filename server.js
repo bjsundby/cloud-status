@@ -77,9 +77,11 @@ app.set('port', (process.env.PORT || 3002));
 var pixelData = new Uint32Array(numberOfLeds);
 ws281x.init(numberOfLeds);
 
-// Setup sensor for detecting flag at bottom
-var sensorpin = 24;
-wpi.pinMode(sensorpin, wpi.INPUT);
+// Setup sensors for detecting flag at bottom
+var bottomsensorpin = 24;
+var topsensorpin = 25;
+wpi.pinMode(bottomsensorpin, wpi.INPUT);
+wpi.pinMode(topsensorpin, wpi.INPUT);
 
 // Setup stepper motor for flag
 var pin1 = 17;
@@ -162,21 +164,21 @@ function lightsOffLeds() {
   ws281x.render(currentColorSet);
 }
 
-function readPositionFlagSensor() {
-  return wpi.digitalRead(sensorpin)
+function readBottomPositionFlagSensor() {
+  return wpi.digitalRead(bottomsensorpin)
+}
+
+function readTopPositionFlagSensor() {
+  return wpi.digitalRead(topsensorpin)
 }
 
 function calibrateFlag() {
-  if (readPositionFlagSensor() == 1) {
-    setLedColor(0, rgbLedColorSet[0]);
-    setLedColor(1, rgbLedColorSet[1]);
-    setLedColor(2, rgbLedColorSet[2]);
+  if (readBottomPositionFlagSensor() == 0) {
     motor1.step(stepRange, function () {
-      if (readPositionFlagSensor() == 1) {
+      if (readBottomPositionFlagSensor() == 0) {
         calibrateFlag();
       }
       else {
-        lightsOffRgbLed();
         currentFlagPosition = 0;
         flagStatus = 2;
       }
@@ -199,7 +201,7 @@ function MoveFlagToPosition() {
     }
     motor1.step(steps, function () {
       currentFlagPosition -= steps;
-      if (readPositionFlagSensor() == 1) {
+      if (readBottomPositionFlagSensor() == 0) {
         MoveFlagToPosition();
       }
       else {
@@ -374,6 +376,8 @@ Object.keys(signals).forEach(function (signal) {
 const server = app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
   setInterval(function () {
+    console.log("Position top: ", readTopPositionFlagSensor())
+    console.log("Position bot: ", readBottomPositionFlagSensor())
     processFlag();
     processLeds();
   }, 500);
