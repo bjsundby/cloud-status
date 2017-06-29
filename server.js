@@ -317,10 +317,14 @@ function setBottomLeds(ledFunction) {
 /* --- Processing functions ---------------------------------- */
 
 function reportUrl() {
-  var link = 'http://' + ip.address() + ':3000';
-  var url = 'https://buildflag-hub.herokuapp.com/api/updateTarget?name=' + os.hostname() + '&link=' + link
-  client.get(url, function (data, response) {
-  })
+  try {
+    var link = 'http://' + ip.address() + ':3000';
+    var url = 'https://buildflag-hub.herokuapp.com/api/updateTarget?name=' + os.hostname() + '&link=' + link
+    client.get(url, function (data, response) {
+    })
+  } catch (error) {
+    console.log("ReportUrl failed")
+  }
 }
 
 function processFlag() {
