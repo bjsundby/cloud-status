@@ -35,8 +35,8 @@ class App extends Component {
         hostName: status.hostName,
         flagPosition: status.flagPosition,
         nextPosition: parseInt(status.flagPosition.next, 10),
-        topLed: status.topLed,
-        bottomLed: status.bottomLed
+        topLed: status.rgbLedFunction,
+        bottomLed: status.neoPixelFunction
       })
     })
   }

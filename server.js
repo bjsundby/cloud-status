@@ -66,7 +66,10 @@ var definedColorSet = [
   colorCombine(255, 0, 0)
 ]
 
-var currentColorSet = definedColorSet.slice()
+var currentColorSet = new Uint32Array(numberOfLeds)
+for (index = 0; index < 19; index++) {
+  currentColorSet[index] = definedColorSet[index]
+}
 
 /* --- Setup subsystems ------------------------------- */
 
@@ -113,11 +116,22 @@ function colorExtract(color, name) {
   return 0
 }
 
-function parseColorsString(colorsString) {
+function parseRGBColorsString(colorsString) {
   var strings = colorsString.split(",")
   var colors = []
   strings.forEach(function (colorString) {
     colors.push(parseInt(colorString, 10))
+  })
+  return colors
+}
+
+function parseGRBColorsString(colorsString) {
+  var strings = colorsString.split(",")
+  var colors = []
+  strings.forEach(function (colorString) {
+    var c = parseInt(colorString, 10)
+    var modifiedColorValue = (((c >> 16) & 255) << 8) + (((c >> 8) & 255) << 16) + (c & 255)
+    colors.push(modifiedColorValue)
   })
   return colors
 }
@@ -368,6 +382,12 @@ function processLeds() {
   }
 }
 
+function setColors(start, size, colors) {
+  for (var index = 0; index < size; index++) {
+    definedColorSet[start + index] = colors[index]
+  }
+}
+
 /* --- Rest api ---------------------------------- */
 
 // Get status, flag positions in %, rgb led function, leds function
@@ -378,8 +398,8 @@ app.get('/getStatus', function (req, res) {
       current: Math.round(currentFlagPosition / stepFactor),
       next: Math.round(nextFlagPosition / stepFactor)
     },
-    topLed: getLedFunctionEnumString(topLedFunction),
-    bottomLed: getLedFunctionEnumString(bottomLedFunction)
+    rgbLedFunction: getLedFunctionEnumString(topLedFunction),
+    neoPixelFunction: getLedFunctionEnumString(bottomLedFunction)
   })
 })
 
@@ -390,26 +410,33 @@ app.get('/setflag/:position', function (req, res) {
   res.json('OK')
 })
 
-// Set top led function, function: Off, On, Rotate, Blink
-app.get('/settopled/function/:function', function (req, res) {
-  var functionValue = parseLedFunctionEnum(req.params.function)
-  topLedFunction = functionValue
-  notifyChangedTopLedFunction()
+// Set rgbled function, function: Off, On, Rotate, Blink
+app.get('/setrgbled/function/:function', function (req, res) {
+  var functionValue = parseLedFunctionEnum(req.params.function);
+  topLedFunction = functionValue;
+  notifyChangedTopLedFunction();
   res.json('OK')
 })
 
-// Set bottom led function, function: Off, On, Rotate, Blink
-app.get('/setbottomled/function/:function', function (req, res) {
-  var functionValue = parseLedFunctionEnum(req.params.function)
-  bottomLedFunction = functionValue
-  notifyChangedBottomLedFunction()
+// Set neopixel function, function: Off, On, Rotate, Blink
+app.get('/setneopixel/function/:function', function (req, res) {
+  var functionValue = parseLedFunctionEnum(req.params.function);
+  bottomLedFunction = functionValue;
+  notifyChangedBottomLedFunction();
   res.json('OK')
 })
 
-// Set led colors
-app.get('/setledcolors/:colors', function (req, res) {
-  var colors = parseColorsString(req.params.colors)
-  definedColorSet = colors
+// Set rgbled colors
+app.get('/setrgbled/colors/:colors', function (req, res) {
+  var colors = parseGRBColorsString(req.params.colors);
+  setColors(16, 3, colors);
+  res.json('OK')
+})
+
+// Set neopixel colors
+app.get('/setneopixel/colors/:colors', function (req, res) {
+  var colors = parseRGBColorsString(req.params.colors);
+  setColors(0, 16, colors);
   res.json('OK')
 })
 

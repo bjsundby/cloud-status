@@ -20,19 +20,14 @@ export function setFlagPosition(position) {
 }
 
 export function setTopLedFunction(ledFunction) {
-  var url = '/settopled/function/' + ledFunction;
+  var url = '/setrgbled/function/' + ledFunction;
   return fetch(url, options)
     .then(response => response.json());
 }
 
 export function setBottomLedFunction(ledFunction) {
-  var url = '/setbottomled/function/' + ledFunction;
+  var url = '/setneopixel/function/' + ledFunction;
   return fetch(url, options)
     .then(response => response.json());
 }
 
-export function setLedColors(colors) {
-  var url = '/setledcolors/' + colors;
-  return fetch(url, options)
-    .then(response => response.json());
-}
