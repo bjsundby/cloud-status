@@ -474,23 +474,23 @@ const server = app.listen(app.get('port'), () => {
 
 /* --- Client push setup and functions ---------------------------------- */
 
-const io = require('socket.io')(server)
+//const io = require('socket.io')(server)
 
 function notifyChangedFlagPosition() {
-  io.emit("flagPosition", {
-    current: Math.round(currentFlagPosition / stepFactor),
-    next: Math.round(nextFlagPosition / stepFactor)
-  })
+  // io.emit("flagPosition", {
+  //   current: Math.round(currentFlagPosition / stepFactor),
+  //   next: Math.round(nextFlagPosition / stepFactor)
+  // })
 }
 
 function notifyChangedTopLedFunction() {
-  io.emit("topLed", {
-    topLed: getLedFunctionEnumString(topLedFunction),
-  })
+  // io.emit("topLed", {
+  //   topLed: getLedFunctionEnumString(topLedFunction),
+  // })
 }
 
 function notifyChangedBottomLedFunction() {
-  io.emit("bottomLed", {
-    bottomLed: getLedFunctionEnumString(bottomLedFunction),
-  })
+  // io.emit("bottomLed", {
+  //   bottomLed: getLedFunctionEnumString(bottomLedFunction),
+  // })
 }
