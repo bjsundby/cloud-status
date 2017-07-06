@@ -7,4 +7,5 @@
 #
 
 cd /home/pi/build-flag2
-sudo npm start
+sudo node server.js
+
