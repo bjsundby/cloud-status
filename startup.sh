@@ -7,5 +7,4 @@
 #
 
 cd /home/pi/build-flag2
-sudo node server.js
-
+sudo node server.js > build-flag2.log 2> build-flag2_err.log
