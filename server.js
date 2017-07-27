@@ -334,7 +334,8 @@ function reportUrl() {
   try {
     var link = 'http://' + ip.address() + ':3000';
     var url = 'https://buildflag-hub.herokuapp.com/api/updateTarget?name=' + os.hostname() + '&link=' + link
-    client.post(url)
+    client.post(url, function (data, response) {
+    })
   } catch (error) {
     console.log("ReportUrl failed")
   }
