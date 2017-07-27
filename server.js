@@ -334,8 +334,7 @@ function reportUrl() {
   try {
     var link = 'http://' + ip.address() + ':3000';
     var url = 'https://buildflag-hub.herokuapp.com/api/updateTarget?name=' + os.hostname() + '&link=' + link
-    client.get(url, function (data, response) {
-    })
+    client.post(url)
   } catch (error) {
     console.log("ReportUrl failed")
   }
@@ -467,9 +466,9 @@ const server = app.listen(app.get('port'), () => {
     processFlag()
     processLeds()
   }, 500)
-  // setInterval(function () {
-  //   reportUrl()
-  // }, 60 * 1000)
+  setInterval(function () {
+    reportUrl()
+  }, 60 * 1000)
 })
 
 /* --- Client push setup and functions ---------------------------------- */
