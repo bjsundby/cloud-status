@@ -467,9 +467,9 @@ const server = app.listen(app.get('port'), () => {
     processFlag()
     processLeds()
   }, 500)
-  setInterval(function () {
-    reportUrl()
-  }, 60 * 1000)
+  // setInterval(function () {
+  //   reportUrl()
+  // }, 60 * 1000)
 })
 
 /* --- Client push setup and functions ---------------------------------- */
