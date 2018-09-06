@@ -1,5 +1,5 @@
-# BuildFlag
-Software development for visual status device (Build Flag 2)
+# Cloud-Status
+Software development for visual status device (Cloud Status)
 
 Control panel at port 3000.
 Rest API at port 3002.

@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "express": "^4.14.1",
-    "i2c-bus": "^1.1.2",
     "ip": "^1.1.5",
     "node-rest-client": "^3.1.0",
     "npm-run-all": "^4.0.2",
@@ -16,8 +15,7 @@
     "react-dom": "^15.4.2",
     "react-rangeslider": "^2.0.1",
     "rpi-ws281x-native": "^0.8.1",
-    "socket.io": "^1.7.3",
-    "wiring-pi": "^2.2.1"
+    "socket.io": "^1.7.3"
   },
   "scripts": {
     "web": "react-scripts start",
