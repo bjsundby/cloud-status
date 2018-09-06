@@ -1,5 +1,5 @@
 {
-  "name": "build-flag2",
+  "name": "cloud-status",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
