@@ -195,6 +195,7 @@ function reportUrl() {
 
 function processLeds() {
   try {
+    console.log("process leds: ", ledFunction)
     setLeds(ledFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
