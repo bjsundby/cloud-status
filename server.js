@@ -15,9 +15,9 @@ var ledFunction = {
   BLINK: 'Blink'
 }
 
-const numberOfLeds = 19
+const numberOfLeds = 15
 
-var ledFunction = ledFunction.OFF
+var ledFunction = ledFunction.Rotate
 
 var LedBlinkState = false
 var LedCurrent = 0
@@ -210,7 +210,7 @@ function setColors(start, size, colors) {
 
 /* --- Rest api ---------------------------------- */
 
-// Get status, flag positions in %, rgb led function, leds function
+// Get status, leds function
 app.get('/getStatus', function (req, res) {
   res.json({
     hostName: os.hostname(),
