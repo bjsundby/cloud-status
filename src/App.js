@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import Slider from 'react-rangeslider'
-import { getStatus,  setledFunction } from './Service'
+import { getStatus,  setLedFunction } from './Service'
 
 import './App.css'
 
