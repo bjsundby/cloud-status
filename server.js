@@ -17,7 +17,7 @@ var ledFunction = {
 
 const numberOfLeds = 15
 
-var ledFunction = ledFunction.Rotate
+var ledFunction = ledFunction.Blink
 
 var LedBlinkState = false
 var LedCurrent = 0
@@ -195,7 +195,7 @@ function reportUrl() {
 
 function processLeds() {
   try {
-    console.log("process leds: ", ledFunction)
+    console.log("process leds: ")
     setLeds(ledFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
