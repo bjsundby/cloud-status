@@ -13,19 +13,7 @@ export function getStatus() {
     .then(response => response.json());
 }
 
-export function setFlagPosition(position) {
-  var url = '/setflag/' + position;
-  return fetch(url, options)
-    .then(response => response.json());
-}
-
-export function setTopLedFunction(ledFunction) {
-  var url = '/setrgbled/function/' + ledFunction;
-  return fetch(url, options)
-    .then(response => response.json());
-}
-
-export function setBottomLedFunction(ledFunction) {
+export function setLedFunction(ledFunction) {
   var url = '/setneopixel/function/' + ledFunction;
   return fetch(url, options)
     .then(response => response.json());

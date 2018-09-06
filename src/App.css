@@ -9,34 +9,17 @@
   color: white;
 }
 
-.FlagContainer {
-  margin: 20px;
-}
-
 .LedContainer {
   display: block;
   margin: 30px 0 30px 0;  
 }
 
-.Container {
-  display: block;
-}
-
-.TopInformation {
+.Information {
   display: inline-block;
   margin: 0 20px 0 20px;
 }
 
-.BottomInformation {
-  display: inline-block;
-  margin: 0 20px 0 20px;
-}
-
-.TopForm {
-  margin: 10px;
-}
-
-.BottomForm {
+.Form {
   margin: 10px;
 }
 
