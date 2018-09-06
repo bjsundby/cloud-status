@@ -195,11 +195,7 @@ function reportUrl() {
 
 function processLeds() {
   try {
-    if (flagStatus < 4) {
-      setLeds(ledFunction.ON)
-    } else {
-      setLeds(ledFunction)
-    }
+    setLeds(ledFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
     console.log("Crashed in processLeds", error)
