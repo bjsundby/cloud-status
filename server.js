@@ -17,7 +17,7 @@ var ledFunction = {
 
 const numberOfLeds = 15
 
-var currentLedFunction = ledFunction.ROTATE
+var currentLedFunction = ledFunction.ON
 
 var ledBlinkState = false
 var ledCurrent = 0
