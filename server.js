@@ -19,8 +19,8 @@ const numberOfLeds = 15
 
 var currentLedFunction = ledFunction.Blink
 
-var LedBlinkState = false
-var LedCurrent = 0
+var ledBlinkState = false
+var ledCurrent = 0
 
 var ip = require("ip")
 var os = require("os")
