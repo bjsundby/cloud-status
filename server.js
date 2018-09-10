@@ -17,7 +17,7 @@ var ledFunction = {
 
 const numberOfLeds = 15
 
-var currentLedFunction = ledFunction.Blink
+var currentLedFunction = ledFunction.BLINK
 
 var ledBlinkState = false
 var ledCurrent = 0
