@@ -17,7 +17,7 @@ var ledFunction = {
 
 const numberOfLeds = 15
 
-var ledFunction = ledFunction.Blink
+var currentLedFunction = ledFunction.Blink
 
 var LedBlinkState = false
 var LedCurrent = 0
@@ -148,9 +148,9 @@ function lightsOffLeds() {
   ws281x.render(currentColorSet)
 }
 
-function setLeds(ledFunction) {
-  console.log('setLeds ' + ledFunction)
-  switch (ledFunction) {
+function setLeds(newLedFunction) {
+  console.log('setLeds ' + newLedFunction)
+  switch (newLedFunction) {
     case "Off":
       currentColorSet.fill(colorCombine(0, 0, 0), 0, 16)
       break
@@ -197,7 +197,7 @@ function reportUrl() {
 function processLeds() {
   try {
     console.log("process leds: ")
-    setLeds(ledFunction)
+    setLeds(currentLedFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
     console.log("Crashed in processLeds", error)
@@ -216,14 +216,14 @@ function setColors(start, size, colors) {
 app.get('/getStatus', function (req, res) {
   res.json({
     hostName: os.hostname(),
-    neoPixelFunction: getLedFunctionEnumString(ledFunction)
+    neoPixelFunction: getLedFunctionEnumString(currentLedFunction)
   })
 })
 
 // Set neopixel function, function: Off, On, Rotate, Blink
 app.get('/setneopixel/function/:function', function (req, res) {
   var functionValue = parseLedFunctionEnum(req.params.function);
-  bottomLedFunction = functionValue;
+  currentLedFunction = functionValue;
   notifyChangedLedFunction();
   res.json('OK')
 })
@@ -272,6 +272,6 @@ const io = require('socket.io')(server)
 
 function notifyChangedLedFunction() {
   io.emit("led", {
-    led: getLedFunctionEnumString(ledFunction),
+    led: getLedFunctionEnumString(currentLedFunction),
   })
 }
