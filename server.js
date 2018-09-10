@@ -149,7 +149,6 @@ function lightsOffLeds() {
 }
 
 function setLeds(newLedFunction) {
-  console.log('setLeds ' + newLedFunction)
   switch (newLedFunction) {
     case "Off":
       currentColorSet.fill(colorCombine(0, 0, 0), 0, 16)
@@ -196,7 +195,6 @@ function reportUrl() {
 
 function processLeds() {
   try {
-    console.log("process leds: ")
     setLeds(currentLedFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
