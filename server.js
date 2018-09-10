@@ -197,7 +197,7 @@ function reportUrl() {
 function processLeds() {
   try {
     console.log("process leds: ")
-    setLeds(ledFunction.BLINK)
+    setLeds(currentLedFunction)
     ws281x.render(currentColorSet)
   } catch (error) {
     console.log("Crashed in processLeds", error)
