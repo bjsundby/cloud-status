@@ -149,6 +149,7 @@ function lightsOffLeds() {
 }
 
 function setLeds(ledFunction) {
+  console.log('setLeds ' + ledFunction)
   switch (ledFunction) {
     case "Off":
       currentColorSet.fill(colorCombine(0, 0, 0), 0, 16)
