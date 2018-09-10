@@ -256,6 +256,7 @@ Object.keys(signals).forEach(function (signal) {
 // Main processing loop, runs 2Hz
 const server = app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`) // eslint-disable-line no-console
+  reportUrl()
   setInterval(function () {
     processLeds()
   }, 500)
