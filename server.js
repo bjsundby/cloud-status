@@ -160,9 +160,9 @@ function setLeds(newLedFunction) {
       }
       break
     case "Rotate":
-      ledCurrent = (ledCurrent + 1) % numberOflLeds;
+      ledCurrent = (ledCurrent + 1) % numberOfLeds;
       for (ledIndex = 0; ledIndex < 16; ledIndex++) {
-        var colorIndex = (ledCurrent + ledIndex) % numberOfleds;
+        var colorIndex = (ledCurrent + ledIndex) % numberOfLeds;
         currentColorSet[ledIndex] = definedColorSet[colorIndex]
       }
       break
