@@ -43,15 +43,11 @@ var definedColorSet = [
   colorCombine(0, 0, 255),
   colorCombine(255, 0, 0),
   colorCombine(0, 255, 0),
-  colorCombine(0, 0, 255),
-  colorCombine(255, 0, 0),
-  colorCombine(0, 255, 0),
-  colorCombine(0, 0, 255),
-  colorCombine(255, 0, 0)
+  colorCombine(0, 0, 255)
 ]
 
 var currentColorSet = new Uint32Array(numberOfLeds)
-for (index = 0; index < 19; index++) {
+for (index = 0; index < numberOfLeds; index++) {
   currentColorSet[index] = definedColorSet[index]
 }
 
@@ -144,36 +140,36 @@ function getLedFunctionEnumString(value) {
 }
 
 function lightsOffLeds() {
-  currentColorSet.fill(colorCombine(0, 0, 0), 0, 19)
+  currentColorSet.fill(colorCombine(0, 0, 0), 0, numberOfLeds)
   ws281x.render(currentColorSet)
 }
 
 function setLeds(newLedFunction) {
   switch (newLedFunction) {
     case "Off":
-      currentColorSet.fill(colorCombine(0, 0, 0), 0, 16)
+      currentColorSet.fill(colorCombine(0, 0, 0), 0, numberOfLeds)
       break
     case "On":
-      for (index = 0; index < 16; index++) {
+      for (index = 0; index < numberOfLeds; index++) {
         currentColorSet[index] = definedColorSet[index]
       }
       break
     case "Rotate":
       ledCurrent = (ledCurrent + 1) % numberOfLeds;
-      for (ledIndex = 0; ledIndex < 16; ledIndex++) {
+      for (ledIndex = 0; ledIndex < numberOfLeds; ledIndex++) {
         var colorIndex = (ledCurrent + ledIndex) % numberOfLeds;
         currentColorSet[ledIndex] = definedColorSet[colorIndex]
       }
       break
     case "Blink":
       if (ledBlinkState) {
-        for (index = 0; index < 16; index++) {
+        for (index = 0; index < numberOfLeds; index++) {
           currentColorSet[index] = definedColorSet[index]
         }
         ledBlinkState = false
       }
       else {
-        currentColorSet.fill(colorCombine(0, 0, 0), 0, 16)
+        currentColorSet.fill(colorCombine(0, 0, 0), 0, numberOfLeds)
         ledBlinkState = true
       }
       break
